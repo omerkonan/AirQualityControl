@@ -1,3 +1,6 @@
+"""
+All constants and initialize values of the project.
+"""
 TIME = 0
 CO2 = 0
 LPG = 0

@@ -1,6 +1,9 @@
 import serial
 
-class Cummunication:
+class Cummunication: 
+    """
+    It's a class for serial communication between Arduino and Rapsberry PI
+    """
     
     def __init__(self):
         self.portpath = "/dev/ttyACM1"
@@ -13,12 +16,20 @@ class Cummunication:
                            # 3 means it is CO
     
     def connect(self):
+        """
+        The method is for conneting serial port 115200.
+        The port should close after using with port.close() command.
+        """
         port = serial.Serial(self.portpath, self.boudrate, \
                              timeout = self.timeout, stopbits = self.stopbits)
         return port
             
     def read_message(self, port):
         
+        """
+        The method is for reading port line by line.
+        It is going to return lastest line of port.
+        """
         ValueByte = port.readline()
         ValueStr = str(ValueByte)
         ValueStr = ValueStr.replace('b', '')
@@ -27,6 +38,11 @@ class Cummunication:
         return ValueStr
         
     def getValue(self, ValueStr):
+    """
+    The method is for classifying message line.
+    Then it is going to return sensor value as a integer and messageID.
+    """
+
         val = 0
         self.msgID = 0
         if ValueStr.find("LPG") != -1:

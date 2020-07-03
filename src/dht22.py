@@ -1,8 +1,8 @@
  
 #!/usr/bin/python
 
-
 import Adafruit_DHT
+
 class DHT22:
     def __init__(self, pin = 4):
         self.humidity = 0
@@ -10,6 +10,9 @@ class DHT22:
         self.pin = pin
         self.sensor = Adafruit_DHT.DHT22
     def read_dht(self, returnType):
+        """
+        The method is going to return humidity or temperature according to returnType
+        """
         
         while(True):
             humidity, temperature = Adafruit_DHT.read_retry(self.sensor, self.pin)
