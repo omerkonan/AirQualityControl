@@ -2,6 +2,7 @@
 It's a cloud air quality control project. It uses mq-2, mq-7, mq-135, mh-z19, dht-22 sensors and save data to MongoDB.
 ## All Cable connections
 If you change GPIO input, code inputs should be updated.
+
 ![All cable connecitons](https://github.com/OmerKonan/AirQualityControl/blob/master/img/all_connections.png)
 ## Prerequirements
  -- Arduino IDE
