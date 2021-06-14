@@ -3,11 +3,9 @@ from pymongo import MongoClient
 
 
 class Database:
-    """
-    The class to send sensor data  to database
-    """
     def __init__(self):
-        self.cluster = MongoClient("mongodb+srv://yhsaylam:123@cluster0-o17jr.mongodb.net/AirControl?retryWrites=true&w=majority")  #Database address
+
+        self.cluster = MongoClient("mongodb+srv://okonan:123@cluster0.8joih.mongodb.net/AirControl?retryWrites=true&w=majority")
         self.db = self.cluster["AirControl"]
         self.collection = self.db["AirControl"]
         self.TimeStr = ""
@@ -18,30 +16,38 @@ class Database:
         self.TempStr = ""
         self.HumStr = ""
         self.FailureStr = ""
+        self.MetanStr = ""
+        self.PropanStr = ""
+        self.HydrogenStr = ""
+        self.missed_post = None
 
     def prepare_data(self, SensorValArr):
         
-        """
-        Databese message should be string. The method setting data as a string with a asidöasidasdkasidkasidk BURAYI TEKRAR KONTROL ET
-        """
         self.TimeStr = SensorValArr[0]
-        self.COStr = str(SensorValArr[3]) + " ppm"
-        self.CO2Str = str(SensorValArr[4]) + " ppm"
-        self.SmokeStr = str(SensorValArr[2]) + " ppm"
         self.LPGStr = str(SensorValArr[1]) + " ppm"
-        self.TempStr = str(SensorValArr[5]) + " °C"
-        self.HumStr = "%" + str(SensorValArr[6]) 
-        self.FailureStr = str(SensorValArr[7])
+        self.MetanStr = str(SensorValArr[2]) + " ppm"
+        self.PropanStr =  str(SensorValArr[3]) + " ppm"
+        self.COStr = str(SensorValArr[4]) + " ppm"
+        self.HydrogenStr = str(SensorValArr[5]) + " ppm"
+        self.SmokeStr = str(SensorValArr[6]) + " ppm"
+        self.CO2Str = str(SensorValArr[7]) + " ppm"
+        
+        
+        self.TempStr = str(SensorValArr[8]) + " °C"
+        self.HumStr = "%" + str(SensorValArr[9]) 
+        self.FailureStr = str(SensorValArr[10])
 
     def send_data(self):
-
-        """
-        Sending data as a JSON file with post variable.
-        """
-
-        post = {"_id":self.TimeStr, "LPG" : self.LPGStr, "Smoke": self.SmokeStr,"CO": self.COStr, "CO2" : self.CO2Str, "Temperature": self.TempStr, "Humidity": self.HumStr, "Failure": self.FailureStr}
-
-        self.collection.insert_one(post)
-
+        
+        if self.missed_post:
+            self.collection.insert_one(missed_post)
+            self.missed_post = None
+            
+        post = {"_id":self.TimeStr, "LPG" : self.LPGStr, "Metan":self.MetanStr, "Propan":self.PropanStr, "CO": self.COStr, "Hydrogen":self.HydrogenStr, \
+                "Smoke": self.SmokeStr, "CO2" : self.CO2Str, "Temperature": self.TempStr, "Humidity": self.HumStr, "Failure": self.FailureStr}
+        try:
+            self.collection.insert_one(post)
+        except:
+            self.missed_post = post
 
 

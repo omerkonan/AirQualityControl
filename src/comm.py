@@ -1,12 +1,9 @@
 import serial
 
-class Cummunication: 
-    """
-    It's a class for serial communication between Arduino and Rapsberry PI
-    """
+class Cummunication:
     
     def __init__(self):
-        self.portpath = "/dev/ttyACM1"
+        self.portpath = "/dev/ttyACM0"
         self.boudrate = 115200
         self.timeout = 1
         self. stopbits = 1.5
@@ -16,50 +13,53 @@ class Cummunication:
                            # 3 means it is CO
     
     def connect(self):
-        """
-        The method is for conneting serial port 115200.
-        The port should close after using with port.close() command.
-        """
         port = serial.Serial(self.portpath, self.boudrate, \
                              timeout = self.timeout, stopbits = self.stopbits)
         return port
             
     def read_message(self, port):
         
-        """
-        The method is for reading port line by line.
-        It is going to return lastest line of port.
-        """
         ValueByte = port.readline()
+        ValueByte = ValueByte.rstrip()
         ValueStr = str(ValueByte)
         ValueStr = ValueStr.replace('b', '')
-        ValueStr = ValueStr.replace('\'','')
-        print(ValueStr)
+        ValueStr = ValueStr.replace('\'', '')
         return ValueStr
         
     def getValue(self, ValueStr):
-    """
-    The method is for classifying message line.
-    Then it is going to return sensor value as a integer and messageID.
-    """
-
         val = 0
         self.msgID = 0
-        if ValueStr.find("LPG") != -1:
-            ValArr = ValueStr.split(":")[1].split("ppm")
-            val = int(ValArr[0])
+        
+        if ValueStr.find("mq2") != -1:
+            ValArr = ValueStr.split(":")
+            val = int(ValArr[1])
             self.msgID = 1
-            #print("Read LPG:", val)
-        if ValueStr.find("SMOKE") != -1:
-            ValArr = ValueStr.split(":")[1].split("ppm")
-            val = int(ValArr[0])
+            print("Read mq2:", val)
+        if ValueStr.find("mq4") != -1:
+            ValArr = ValueStr.split(":")
+            val = int(ValArr[1])
             self.msgID = 2
-            #print("Read Smoke:", val)
-        if ValueStr.find("CO") != -1:
-            ValArr = ValueStr.split(":")[1].split("ppm")
-            val = int(ValArr[0])
+            print("Read mq4:", val)
+        if ValueStr.find("mq6") != -1:
+            ValArr = ValueStr.split(":")
+            val = int(ValArr[1])
             self.msgID = 3
-            #print("Read CO:", val)
+            print("Read mq6:", val)
+        if ValueStr.find("mq7") != -1:
+            ValArr = ValueStr.split(":")
+            val = int(ValArr[1])
+            self.msgID = 4
+            print("Read mq7:", val)
+        if ValueStr.find("mq8") != -1:
+            ValArr = ValueStr.split(":")
+            val = int(ValArr[1])
+            self.msgID = 5
+            print("Read mq8:", val)
+        if ValueStr.find("mq135") != -1:
+            ValArr = ValueStr.split(":")
+            val = int(ValArr[1])
+            self.msgID = 6
+            print("Read 135:", val)
             
         return val, self.msgID
 
